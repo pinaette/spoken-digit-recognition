@@ -1,62 +1,18 @@
 import os
 import time
-import librosa
-import librosa.display as ld
-import matplotlib.pyplot as plt
-
-def human_readable_time(duration):
-    '''
-    function to return human-readable time as string (%h %m %s)
-    '''
-    if duration > 60:
-        minutes = round(duration / 60)
-        seconds = round(duration % 60)
-        if minutes > 60:
-            hours = round(minutes / 60)
-            minutes = minutes % 60
-        else:
-         hours = 0
-    else:
-        hours = 0
-        minutes = 0
-        seconds = round(duration)
-    return (str(hours)+'h', str(minutes)+'m', str(seconds)+'s')
-
-def plot_mel_from_wav(path, filename, rate=None):
-    '''
-    load audio as waveform, extract sampling rate, convert both into melspectrogram, calculate decibels, plot.
-
-    waveform is a time series, represented as a 1d numpy floating point array.
-    by default .load() samples at 22050 (number of samples per second of audio) and mixes to mono.
-    if rate is given, file is sampled at given rate instead of 22050.
-    '''
-    if rate:
-        waveform, sampling_rate = librosa.load(path+filename, sr=rate)
-    else:
-        waveform, sampling_rate = librosa.load(path+filename)
-    
-    # create melspectrogram using waveform and sampling rate
-    S = librosa.feature.melspectrogram(y=waveform, sr=sampling_rate)
-    # calculate decibels
-    S_dB = librosa.power_to_db(S)
-
-    # create plot
-    fig, ax = plt.subplots()
-    img = ld.specshow(S_dB, sr=sampling_rate, ax=ax)
-
-    # save images as .png in imgs directory
-    plt.savefig('imgs/' + filename[:-3] + 'png')
-    plt.close()
+from processing import *
 
 # create relative directory within current directory to store images
 os.mkdir('imgs')
 # use relative directory to get list of filenames as string
-filepath='data/'
-# filepath='sample_data/'
+filepath = 'data/'
+# filepath = 'sample_data/'
 
 files = os.listdir(filepath)
 
 # get time before starting image creation
+print('creating mel spectrograms...')
+print('...')
 tick = time.time()
 # store mel spectrograms as images
 for file in files:
@@ -65,4 +21,25 @@ for file in files:
 duration = time.time() - tick
 
 # display elapsed time
+print('spectrograms created')
 print('elapsed time:', human_readable_time(duration))
+print('...')
+
+# set category labels for digits
+labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# get list of img file names as string
+imgs = os.listdir('imgs/')
+
+# create subdirectories for each label
+for label in labels:
+    os.mkdir('imgs/'+label)
+
+# move each image to its subdirectory
+print('moving spectrograms to subfolders per digit')
+
+for img in imgs:
+    lbl = img[0]
+    os.rename('imgs/'+img, 'imgs/'+lbl+'/'+img)
+
+print('all spectrograms labelled!')
