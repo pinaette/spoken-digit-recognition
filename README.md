@@ -3,7 +3,7 @@
 Speech recognition for digits (0-9) in English, implemented as the final project for the Data Science Bootcamp at Lighthouse Labs.
 
 What this project does:
-- Create mel spectrograms from the audio files.
+- Create mel spectrograms from audio files.
 - Generate data by adding noise, increasing amplitude, changing pitch and speed.
 - Train a convolutional neural network using mel spectrograms of both original and generated data.
 
