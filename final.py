@@ -15,8 +15,8 @@ start_time = time.time()
 # create relative directory within current directory to store images
 os.mkdir('imgs')
 # use relative directory to get list of filenames as string
-filepath = 'data/'
-# filepath = 'sample_data/'
+# filepath = 'data/'
+filepath = 'sample_data/'
 files = os.listdir(filepath)
 
 # initialize dictionary for storing each datapoint and its augmented versions
@@ -26,7 +26,7 @@ print('creating mel spectrograms...')
 print('...')
 
 # get time before starting image creation
-tick = time.time()
+tick1 = time.time()
 
 # store mel spectrograms as images
 for file in files:
@@ -38,9 +38,9 @@ for file in files:
         plot_mel_from_waveform(waveform=v, sampling_rate=sr, filename=file, modifier=k)
 
 # display elapsed time for image creation
-duration = time.time() - tick
+duration1 = time.time() - tick1
 print('spectrograms created')
-print('elapsed time for creating spectrograms:', human_readable_time(duration))
+print('elapsed time for creating spectrograms:', human_readable_time(duration1))
 print('...')
 
 # get list of img file names as string
@@ -52,24 +52,26 @@ for label in labels:
     os.mkdir('imgs/'+label)
 
 # move each image to its respective subdirectory
-print('moving spectrograms to subfolders per digit')
+print('moving spectrograms to subfolders per digit...')
 for img in imgs:
     lbl = img[0]
     os.rename('imgs/'+img, 'imgs/'+lbl+'/'+img)
 
-print('all spectrograms labelled!')
+print('all spectrograms labelled')
 print('...')
 print('creating training and test datasets...')
-tick = time.time()
+tick2 = time.time()
+print('...')
 
 # create datasets
 train = get_data(labels=labels, subset='training')
 test = get_data(labels=labels, subset='validation')
 
 # display elapsed time for dataset creation
-duration = time.time() - tick
+print('...')
+duration2 = time.time() - tick2
 print('datasets created')
-print('elapsed time for creating datasets:', human_readable_time(duration))
+print('elapsed time for creating datasets:', human_readable_time(duration2))
 print('...')
 
 print('compiling model...')
@@ -87,7 +89,9 @@ callbacks = [
         mode='max')
 ]
 
-tick = time.time()
+print('training model...')
+tick3 = time.time()
+print('...')
 model.fit(
     train,
     epochs = 100,
@@ -96,9 +100,10 @@ model.fit(
     validation_data = test
 )
 # display elapsed time for training
-duration = time.time() - tick
+print('...')
+duration3 = time.time() - tick3
 print('training complete')
-print('elapsed time for training:', human_readable_time(duration))
+print('elapsed time for training:', human_readable_time(duration3))
 print('...')
 
 # display total time running this code
